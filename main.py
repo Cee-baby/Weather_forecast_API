@@ -11,21 +11,20 @@ load_dotenv()
 
 app = FastAPI(title="☁🌞")
 
-test_id = os.getenv("a809458ee94fc0c2678e48bfb541c3b9")
-BASE_URL = f"https://api.openweathermap.org/data/3.0/onecall?lat=33.44&lon=-94.04&exclude=hourly,daily&appid={test_id}"
+API_KEY = os.getenv("WEATHER_API_KEY")
+BASE_URL = "https://api.openweathermap.org/data/2.5/weather"
 
 
 @app.get("/weather/{city}")
-async def get_weather(city:str):
+async def get_weather(city: str):
 
     current_date = datetime.now().strftime("%Y-%m-%d")
 
     
 
     params = {
-        "q": "city",
-        "k":"country",
-        "appid": test_id,
+        "q": city,
+        "appid": API_KEY,
         "units": "metric"
 
     }
@@ -37,7 +36,7 @@ async def get_weather(city:str):
         data = response.json()
 
         weather_data = {
-        "city": data["city"],
+        "city": data["name"],
         "country": data["sys"]["country"],
         "date": current_date,
         "sunrise": datetime.fromtimestamp(data["sys"]["sunrise"]).strftime("%Y-%m-%d %H:%M:%S"),
@@ -51,9 +50,3 @@ async def get_weather(city:str):
         }
 
         return weather_data
-
-
-
-
-
-
